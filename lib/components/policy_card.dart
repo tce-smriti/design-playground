@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constants.dart';
+import '../locales/locale_keys.g.dart';
 import '../models/button_list.dart';
 
 class PolicyCard extends StatelessWidget {
@@ -67,7 +69,7 @@ class PolicyCard extends StatelessWidget {
                                       textAlign: TextAlign.left)),
                               Padding(
                                   padding: EdgeInsets.only(left: 10),
-                                  child: Text("Insurance",
+                                  child: Text(LocaleKeys.Insurance.tr(),
                                       style: GoogleFonts.poppins(
                                           textStyle: TextStyle(
                                               fontSize: 14,
@@ -87,7 +89,7 @@ class PolicyCard extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Padding(
-                                        padding: EdgeInsets.only(left: 10),
+                                        padding: EdgeInsets.only(left: 10,right: 10),
                                         child: Text("1",
                                             style: GoogleFonts.poppins(
                                                 textStyle: TextStyle(
@@ -114,7 +116,7 @@ class PolicyCard extends StatelessWidget {
                     ],
                   )))
           : Container(
-              padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+              padding: EdgeInsets.fromLTRB(5, 5, 5, 30),
               width: 170,
               height: 200,
               child: Card(
@@ -151,7 +153,7 @@ class PolicyCard extends StatelessWidget {
                                       textAlign: TextAlign.left)),
                               Padding(
                                   padding: EdgeInsets.only(left: 10),
-                                  child: Text("Insurance",
+                                  child: Text(LocaleKeys.Insurance.tr(),
                                       style: GoogleFonts.poppins(
                                           textStyle: TextStyle(
                                               fontSize: 14,
@@ -171,7 +173,7 @@ class PolicyCard extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Padding(
-                                        padding: EdgeInsets.only(left: 10),
+                                        padding: EdgeInsets.only(left: 10,right: 10),
                                         child: Text("1",
                                             style: GoogleFonts.poppins(
                                                 textStyle: TextStyle(
@@ -181,7 +183,7 @@ class PolicyCard extends StatelessWidget {
                                             textAlign: TextAlign.left)),
                                     Padding(
                                         padding:
-                                            EdgeInsets.only(left: 1, top: 5),
+                                            EdgeInsets.only(left: 1, top: 5,right: 1),
                                         child: Text("Policies",
                                             style: GoogleFonts.poppins(
                                                 textStyle: TextStyle(
@@ -207,7 +209,7 @@ class RenewalButton extends StatelessWidget {
     return Container(
       width: 120,
       height: 30,
-      padding: EdgeInsets.only(left: 10.0, bottom: 5.0),
+      padding: EdgeInsets.only(left: 10.0, bottom: 5.0,right: 10),
       child: ElevatedButton(
           child: Text("Renewal",
               style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 12))),

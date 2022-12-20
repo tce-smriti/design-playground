@@ -29,7 +29,7 @@ class CustomHeaderView extends StatelessWidget {
           Spacer(),
           Padding(
               padding: EdgeInsets.only(left: 20),
-              child: Text("View all",
+              child: Text(LocaleKeys.view_all.tr(),
                   style: GoogleFonts.poppins(
                       textStyle:TextStyle(fontSize: 12,color: kHomeViewAllColor)),
                   textAlign: TextAlign.left)),

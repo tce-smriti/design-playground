@@ -97,7 +97,7 @@ class ServicesCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                              padding: EdgeInsets.only(left: 10,top: 10),
+                              padding: EdgeInsets.only(left: 10,top: 10,right: 10),
                               child: Text(title,
                                   style: GoogleFonts.poppins(
                                       textStyle: TextStyle(
@@ -106,7 +106,7 @@ class ServicesCard extends StatelessWidget {
                                           color: titleColor)),
                                   textAlign: TextAlign.left)),
                           Padding(
-                              padding: EdgeInsets.only(left: 10),
+                              padding: EdgeInsets.only(left: 10,right: 10),
                               child: Text(subTitle,
                                   style: GoogleFonts.poppins(
                                       textStyle: TextStyle(

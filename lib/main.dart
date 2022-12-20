@@ -8,14 +8,21 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:proste_bezier_curve/proste_bezier_curve.dart';
 import 'package:proste_bezier_curve/utils/type/index.dart';
-
+import 'assets_type.dart';
 import 'locales/l10.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await Hive.initFlutter();
+  // Open the peopleBox
+  Hive.registerAdapter(AssetAdapter());
+  await Hive.openBox<Asset>("assetFolder1");
+
   runApp(EasyLocalization(
     supportedLocales: L10n.all,
     path: 'assets/locales',
