@@ -43,10 +43,18 @@ dependencies:
   easy_localization: ^3.0.1
   easy_localization_loader:
   equatable: ^2.0.3
+  dots_indicator: ^2.1.0
+  flutter_cache_manager: ^3.3.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  path_provider: ^2.0.11
+  http: ^0.13.5
+  path: ^1.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator: ^2.0.0
   build_runner: ^2.1.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -74,6 +82,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/locales/
+    - assets/json/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

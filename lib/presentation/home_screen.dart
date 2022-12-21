@@ -95,9 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ignoring: isOpened,
         child: Scaffold(
           bottomNavigationBar: navigationBar(),
-          body: isLoading
-              ? CircularProgressIndicator()
-              : SingleChildScrollView(
+          body: SingleChildScrollView(
                   child: Column(
                     children: [
                       CustomPaint(
