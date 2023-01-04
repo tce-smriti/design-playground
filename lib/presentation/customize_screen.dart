@@ -16,84 +16,87 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-          child: Stack(
+      body: Stack(
         children: [
           Column(
             children: [
-              ClipPath(
-                clipper: TopWidgetClipper(),
-                child: Container(
-                  height: 320,
-                  color: Colors.blue,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 48,
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: SvgPicture.asset(
-                              "assets/icons/logo-horizontal.svg",
-                              width: 30,
-                              height: 30,
-                            ),
+              Container(
+                height: MediaQuery.of(context).size.height*0.30,
+                color: Colors.blue,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 48,
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: SvgPicture.asset(
+                            "assets/icons/logo-horizontal.svg",
+                            width: 30,
+                            height: 30,
                           ),
-                          Spacer(),
-                          Padding(
-                              padding: EdgeInsets.all(20),
-                              child: Text("عربي",
-                                  style: GoogleFonts.poppins(
-                                      textStyle: Theme.of(context)
-                                          .textTheme
-                                          .headline1),
-                                  textAlign: TextAlign.left)),
-                        ],
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text("Your Comfort Is Our Concern",
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      fontSize: 14, color: kHeaderColor)),
-                              textAlign: TextAlign.left)),
-                      Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text("Customize Your App",
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      fontSize: 26,
-                                      color: kHeaderColor,
-                                      fontWeight: FontWeight.bold)),
-                              textAlign: TextAlign.left)),
-                    ],
-                  ),
+                        ),
+                        Spacer(),
+                        Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text("عربي",
+                                style: GoogleFonts.poppins(
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .headline1),
+                                textAlign: TextAlign.left)),
+                      ],
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text("Your Comfort Is Our Concern",
+                            style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontSize: 14, color: kHeaderColor)),
+                            textAlign: TextAlign.left)),
+                    Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text("Customize Your App",
+                            style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontSize: 26,
+                                    color: kHeaderColor,
+                                    fontWeight: FontWeight.bold)),
+                            textAlign: TextAlign.left)),
+                  ],
                 ),
               ),
               Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Padding(
+              padding: EdgeInsets.only(left: 20,top: 5,bottom: 5),
+              child: Text("Select Your customization options below:",
+              style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+              fontSize: 13,
+              color: kHomeHeaderColor,
+              fontWeight: FontWeight.bold)),
+              textAlign: TextAlign.left))),
+              Container(
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   width: double.maxFinite,
-                  height: MediaQuery.of(context).size.height * 0.18,
+                  height: MediaQuery.of(context).size.height * 0.12,
                   child: Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                       elevation: 5,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10),
-                              child: Text("Right or Left handed",
-                                  style: GoogleFonts.poppins(
-                                      textStyle: Theme.of(context)
-                                          .textTheme
-                                          .headline4),
-                                  textAlign: TextAlign.left)),
+                         Padding(padding: EdgeInsets.only(left: 25,top: 5),child:  Text("Right or Left handed",
+                             style: GoogleFonts.poppins(
+                                 textStyle: Theme.of(context)
+                                     .textTheme
+                                     .headline4),
+                             textAlign: TextAlign.left),),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -120,9 +123,9 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                         ],
                       ))),
               Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   width: double.maxFinite,
-                  height: MediaQuery.of(context).size.height * 0.18,
+                  height: MediaQuery.of(context).size.height * 0.12,
                   child: Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
@@ -132,7 +135,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10),
+                              padding: EdgeInsets.only(left: 25, top: 5),
                               child: Text("Font Size",
                                   style: GoogleFonts.poppins(
                                       textStyle: Theme.of(context)
@@ -165,9 +168,9 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                         ],
                       ))),
               Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   width: double.maxFinite,
-                  height: MediaQuery.of(context).size.height * 0.20,
+                  height: MediaQuery.of(context).size.height * 0.14,
                   child: Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
@@ -177,7 +180,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10),
+                              padding: EdgeInsets.only(left: 10, top: 5),
                               child: Text("Biometric Login",
                                   style: GoogleFonts.poppins(
                                       textStyle: Theme.of(context)
@@ -230,7 +233,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
               Container(
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                   width: double.maxFinite,
-                  height: MediaQuery.of(context).size.height * 0.20,
+                  height: MediaQuery.of(context).size.height * 0.18,
                   child: Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
@@ -301,20 +304,20 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                       ))),
               Container(
                 padding: EdgeInsets.all(20.0),
-                height: 80.0,
+                height: MediaQuery.of(context).size.height*0.1,
                 child: ElevatedButton(
                     style: ButtonStyle(
                         foregroundColor:
-                            MaterialStateProperty.all<Color>(kBtnColorSelected),
+                        MaterialStateProperty.all<Color>(kBtnColorSelected),
                         backgroundColor:
-                            MaterialStateProperty.all<Color>(kBtnBorderColor),
+                        MaterialStateProperty.all<Color>(kBtnBorderColor),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10.0)),
-                                    side: BorderSide(
-                                        color: kBtnBorderColor, width: 1.0)))),
+                        MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                                side: BorderSide(
+                                    color: kBtnBorderColor, width: 1.0)))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -335,7 +338,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
               )
             ],
           ),
-          Positioned(
+          /*Positioned(
               top: 300,
               left: 20,
               child: Padding(
@@ -346,9 +349,9 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                               fontSize: 13,
                               color: kHomeHeaderColor,
                               fontWeight: FontWeight.bold)),
-                      textAlign: TextAlign.left)))
+                      textAlign: TextAlign.left)))*/
         ],
-      )),
+      )
     );
   }
 }

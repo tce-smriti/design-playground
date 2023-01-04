@@ -6,10 +6,10 @@ import '../constants.dart';
 class ButtonNotch extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    var dotPoint = Offset(size.width / 2, 2);
+    var dotPoint = Offset(size.width / 2,2);
 
     var paint_1 = Paint()
-      ..color = white
+      ..color = dashboardBackground
       ..style = PaintingStyle.fill;
     var paint_2 = Paint()
       ..color = bgColor
@@ -23,7 +23,7 @@ class ButtonNotch extends CustomPainter {
     path.quadraticBezierTo(size.width - 7.5, 0, size.width, 0);
     path.close();
     canvas.drawPath(path, paint_1);
-    canvas.drawCircle(dotPoint, 6, paint_2);
+    canvas.drawCircle(dotPoint, 8, paint_2);
   }
 
   @override

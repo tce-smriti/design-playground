@@ -236,22 +236,26 @@ class HeaderButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 30,
-      padding: EdgeInsets.only(left: 10.0, bottom: 5.0),
-      child: ElevatedButton(
-          child: Text(title,
-              style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 12))),
-          style: ButtonStyle(
-              foregroundColor:
-                  MaterialStateProperty.all<Color>(kRenewalBtnForeColor),
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Color(0xFF08298A)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(80.0)),
-                      side: BorderSide(color: Color(0xFF08298A))))),
-          onPressed: () {}),
-    );
+    return Padding(padding: EdgeInsets.only(left: 10),child: Container(
+      padding: EdgeInsets.all(5),
+      child: Row(
+        children: [
+          Text(title,
+              style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 12),color: kHeaderColor)),
+          SizedBox(width: 4,),
+          Text("7",
+              style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 12),color: notificationTextCount))
+        ],
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: notificationTabCircle,
+          style: BorderStyle.solid,
+          width: 1.0,
+        ),
+        color: notificationTabCircle,
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+    ),);
   }
 }

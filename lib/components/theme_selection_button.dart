@@ -24,9 +24,9 @@ class ThemeSelectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
       width: btnWidth,
-      height: 80.0,
+      height: 50.0,
       child: ElevatedButton(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:art_flutter/components/header_policy_card.dart';
 import 'package:art_flutter/components/quick_tips_card.dart';
 import 'package:art_flutter/components/service_card.dart';
 import 'package:art_flutter/components/special_offer_card.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -19,6 +21,7 @@ import '../assets_type.dart';
 import '../components/custom_button.dart';
 import '../components/custom_header_view_home.dart';
 import '../components/custom_paint_bar.dart';
+import '../components/header_medical_policy_card.dart';
 import '../components/policy_card.dart';
 import '../constants.dart';
 import '../models/bottom_bar.dart';
@@ -40,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _myDuration = Duration(seconds: 1);
   double _myValue = 260.0;
   double _myNewValue = 460;
+  bool isOpen = false;
   late Box<Asset> dataBox;
   late String _dir;
   List<int> assets = [];
@@ -52,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     title = "Home";
     super.initState();
-   /* dataBox = Hive.box<Asset>("assetFolder1");
+    /* dataBox = Hive.box<Asset>("assetFolder1");
     _assetList = dataBox.values.toList();
     _downloadAssets(_assetList, dataBox);*/
     //var data = dataBox.getAt(0);
@@ -78,441 +82,404 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SideMenu(
-      key: _endSideMenuKey,
-      inverse: true,
-      // end side menu
-      background: kPrimaryColor,
-      type: SideMenuType.shrinkNSlide,
-      menu: Padding(
-        padding: const EdgeInsets.only(left: 25.0),
-        child: buildMenu(),
+    return SafeArea(
+        child: ZoomDrawer(
+      menuScreen: DrawerScreen(
+        setIndex: (index) {},
       ),
-      onChange: (_isOpened) {
-        setState(() => isOpened = _isOpened);
-      },
-      child: IgnorePointer(
-        ignoring: isOpened,
-        child: Scaffold(
-          bottomNavigationBar: navigationBar(),
-          body: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      CustomPaint(
-                        painter: CurvePainter(),
-                        child: AnimatedContainer(
-                            width: MediaQuery.of(context).size.width,
-                            height: _myValue,
-                            duration: _myDuration,
-                            child: Stack(
-                              children: [
-                                Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Padding(
-                                        padding: EdgeInsets.only(top: 30),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.all(20),
-                                                  child: SvgPicture.asset(
-                                                    "assets/icons/logo-horizontal.svg",
-                                                    width: 20,
-                                                    height: 20,
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Row(
-                                                  children: [
-                                                    InkWell(
-                                                      onTap: () async {
-                                                        /*  setState(() async {
+      mainScreen: Scaffold(
+        bottomNavigationBar: navigationBar(),
+        body: SingleChildScrollView(
+          child: Stack(
+            key: UniqueKey(),
+            children: [
+              Container(
+                color: dashboardBackground,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 260,
+                    ),
+                    CustomHeaderView(title: LocaleKeys.my_policies.tr()),
+                    Container(
+                      height: 170.0,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(20),
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Icon(Icons.add),
+                              style: ButtonStyle(
+                                shape:
+                                    MaterialStateProperty.all(CircleBorder()),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.all(20)),
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.blue),
+                                // <-- Button color
+                                overlayColor:
+                                    MaterialStateProperty.resolveWith<Color?>(
+                                        (states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.red; // <-- Splash color
+                                }),
+                              ),
+                            ),
+                          ),
+                          PolicyCard(
+                            cardHeight: 20,
+                            assetPath: 'assets/icons/motor_policy.svg',
+                            onPressed: () {},
+                            imageType: 1,
+                            subTitle: '',
+                            isRenewal: false,
+                            title: LocaleKeys.Medical.tr(),
+                          ),
+                          PolicyCard(
+                            cardHeight: 20,
+                            assetPath: 'assets/icons/motor_policy_1.svg',
+                            onPressed: () {},
+                            imageType: 1,
+                            subTitle: '',
+                            isRenewal: true,
+                            title: LocaleKeys.Motor.tr(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    DotsIndicator(
+                      dotsCount: 2,
+                      position: 0,
+                      decorator: DotsDecorator(
+                        size: const Size.square(9.0),
+                        activeSize: const Size(18.0, 9.0),
+                        activeShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                      ),
+                    ),
+                    CustomHeaderView(title: LocaleKeys.services.tr()),
+                    Container(
+                      child: Row(
+                        children: [
+                          ServicesCard(
+                            cardHeight: 20,
+                            assetPath: 'assets/icons/road_assistance.svg',
+                            onPressed: () {},
+                            imageType: 1,
+                            subTitle: LocaleKeys.assistance.tr(),
+                            cardType: 1,
+                            title: LocaleKeys.Road_Side.tr(),
+                            titleColor: Color(0xFFF5A800),
+                          ),
+                          Column(
+                            children: [
+                              ServicesCard(
+                                  cardHeight: 20,
+                                  assetPath: 'assets/icons/health_services.svg',
+                                  onPressed: () {},
+                                  imageType: 1,
+                                  subTitle: LocaleKeys.services.tr(),
+                                  cardType: 2,
+                                  title: LocaleKeys.Health.tr(),
+                                  titleColor: Color(0xFF2ED8AA)),
+                              ServicesCard(
+                                  cardHeight: 20,
+                                  assetPath: 'assets/icons/claim_services.svg',
+                                  onPressed: () {},
+                                  imageType: 1,
+                                  subTitle: LocaleKeys.services.tr(),
+                                  cardType: 2,
+                                  title: LocaleKeys.Claim.tr(),
+                                  titleColor: Color(0xFF39A9ED)),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomHeaderView(title: LocaleKeys.special_offers.tr()),
+                    Container(
+                      height: 170.0,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          SpecialOfferCard(),
+                          SpecialOfferCard(),
+                        ],
+                      ),
+                    ),
+                    CustomHeaderView(title: LocaleKeys.quick_tips.tr()),
+                    Column(
+                      children: [
+                        QuickTipsCard(
+                          cardHeight: 20,
+                          assetPath: 'assets/icons/quick_tips_health.svg',
+                          onPressed: () {},
+                          imageType: 1,
+                          subTitle: '',
+                          isRenewal: false,
+                          title: LocaleKeys.healthy_tips.tr(),
+                        ),
+                        QuickTipsCard(
+                          cardHeight: 20,
+                          assetPath: 'assets/icons/quick_tips_2.svg',
+                          onPressed: () {},
+                          imageType: 1,
+                          subTitle: '',
+                          isRenewal: false,
+                          title: LocaleKeys.ride_safe.tr(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height:
+                    isOpen ? MediaQuery.of(context).size.height * 0.87 : null,
+                child: isOpen
+                    ? Image(
+                        image: AssetImage("assets/icons/expanded_header_2.png"))
+                    : Image(
+                        image:
+                            AssetImage("assets/icons/collapsed_header_2.png"),
+                      ),
+              ),
+              isOpen
+                  ? Positioned(
+                      top: MediaQuery.of(context).size.height * 0.81,
+                      right: MediaQuery.of(context).size.width * 0.08,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isOpen = !isOpen;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.keyboard_arrow_up_rounded,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : Positioned(
+                      top: MediaQuery.of(context).size.height * 0.20,
+                      right: MediaQuery.of(context).size.width * 0.08,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isOpen = !isOpen;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+              Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                      padding: EdgeInsets.only(top: 1),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(20),
+                                child: SvgPicture.asset(
+                                  "assets/icons/logo-horizontal.svg",
+                                  width: 20,
+                                  height: 20,
+                                ),
+                              ),
+                              Spacer(),
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      /*  setState(() async {
                                                     await context.setLocale(context.supportedLocales[0]);
                                                   });*/
-                                                      },
-                                                      child: SvgPicture.asset(
-                                                        "assets/icons/notification.svg",
-                                                        width: 20,
-                                                        height: 20,
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(20),
-                                                        child: SvgPicture.asset(
-                                                          "assets/icons/nav_icon.svg",
-                                                          width: 15,
-                                                          height: 15,
-                                                        ),
-                                                      ),
-                                                      onTap: () =>
-                                                          toggleMenu(true),
-                                                    )
-                                                  ],
-                                                )
-                                              ],
+                                    },
+                                    child: SvgPicture.asset(
+                                      "assets/icons/notification.svg",
+                                      width: 20,
+                                      height: 20,
+                                    ),
+                                  ),
+                                  InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: SvgPicture.asset(
+                                          "assets/icons/nav_icon.svg",
+                                          width: 15,
+                                          height: 15,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        ZoomDrawer.of(context)!.toggle();
+                                      }),
+                                ],
+                              )
+                            ],
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              child: Text(LocaleKeys.good_morning.tr(),
+                                  style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                          fontSize: 12, color: kHeaderColor)),
+                                  textAlign: TextAlign.left)),
+                          Padding(
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              child: Text("Smriti Ranjan Biswal",
+                                  style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                          fontSize: 16,
+                                          color: kHeaderColor,
+                                          fontWeight: FontWeight.bold)),
+                                  textAlign: TextAlign.left)),
+                          isOpen
+                              ? Padding(
+                                  padding: EdgeInsets.only(top: 20, left: 10),
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.70,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 127,
+                                              child: HeaderButton(
+                                                  title: LocaleKeys
+                                                      .motor_renewal
+                                                      .tr()),
                                             ),
+                                            Spacer(),
                                             Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 20, right: 20),
+                                                padding:
+                                                    EdgeInsets.only(right: 10),
                                                 child: Text(
-                                                    LocaleKeys.good_morning
-                                                        .tr(),
+                                                    LocaleKeys.view_all.tr(),
                                                     style: GoogleFonts.poppins(
                                                         textStyle: TextStyle(
                                                             fontSize: 12,
                                                             color:
                                                                 kHeaderColor)),
                                                     textAlign: TextAlign.left)),
-                                            Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 20, right: 20),
-                                                child: Text(
-                                                    "Smriti Ranjan Biswal",
-                                                    style: GoogleFonts.poppins(
-                                                        textStyle: TextStyle(
-                                                            fontSize: 16,
-                                                            color: kHeaderColor,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    textAlign: TextAlign.left)),
-                                            Padding(
-                                              padding: EdgeInsets.all(10),
-                                              child: Container(
-                                                height: 30,
-                                                child: ListView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  children: <Widget>[
-                                                    HeaderButton(
-                                                        title: LocaleKeys
-                                                            .motor_renewal
-                                                            .tr()),
-                                                    HeaderButton(
-                                                      title: LocaleKeys
-                                                          .medical_renewal
-                                                          .tr(),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: 20,
-                                                    left: 10,
-                                                    right: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Text("Arabic",
-                                                        style: GoogleFonts.poppins(
-                                                            textStyle: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color:
-                                                                    kHomeHeaderColor)),
-                                                        textAlign:
-                                                            TextAlign.left),
-                                                    Switch(
-                                                      // thumb color (round icon)
-                                                      activeColor: Colors.amber,
-                                                      activeTrackColor:
-                                                          Colors.cyan,
-                                                      inactiveThumbColor: Colors
-                                                          .blueGrey.shade600,
-                                                      inactiveTrackColor:
-                                                          Colors.grey.shade400,
-                                                      splashRadius: 50.0,
-                                                      // boolean variable value
-                                                      value: forArabic,
-                                                      // changes the state of the switch
-                                                      onChanged: (value) {
-                                                        setState(() async {
-                                                          if (forArabic == true)
-                                                            await context
-                                                                .setLocale(context
-                                                                    .supportedLocales[1]);
-                                                          else
-                                                            await context
-                                                                .setLocale(context
-                                                                    .supportedLocales[0]);
-                                                          forArabic = value;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
-                                                ))
                                           ],
-                                        ))),
-                                Positioned(
-                                  top: 190,
-                                  right: 78,
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _myValue = _myNewValue;
-                                      });
-                                    },
-                                    child: SvgPicture.asset(
-                                      "assets/icons/arrow_down.svg",
+                                        ),
+                                        HeaderPolicyCard(),
+                                        HeaderPolicyCard(),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        SizedBox(
+                                          width: 140,
+                                          child: HeaderButton(
+                                            title:
+                                                LocaleKeys.medical_renewal.tr(),
+                                          ),
+                                        ),
+                                        HeaderMedicalPolicyCard(),
+                                        HeaderMedicalPolicyCard(),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Center(
+                                          child: Text("+ Check More",
+                                              style: GoogleFonts.poppins(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 14,
+                                                      color:
+                                                          notificationTextColor)),
+                                              textAlign: TextAlign.left),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Padding(
+                                  padding: EdgeInsets.only(top: 20, left: 10),
+                                  child: Container(
+                                    height: 30,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: <Widget>[
+                                        HeaderButton(
+                                            title:
+                                                LocaleKeys.motor_renewal.tr()),
+                                        HeaderButton(
+                                          title:
+                                              LocaleKeys.medical_renewal.tr(),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                /* Positioned(
-                            top: 340,
-                            right: 78,
-                            child: InkWell(
-                              onTap: (){
-                                setState(() {
-                                  _myValue = 260;
-                                });
-                              },
-                              child: SvgPicture.asset(
-                                "assets/icons/arrow_down.svg",
-                              ),
-                            ),
-                          )*/
-                              ],
-                            )),
-                      ),
-                      CustomHeaderView(title: LocaleKeys.my_policies.tr()),
-                      Container(
-                        height: 170.0,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(20),
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                child: Icon(Icons.add),
-                                style: ButtonStyle(
-                                  shape:
-                                      MaterialStateProperty.all(CircleBorder()),
-                                  padding: MaterialStateProperty.all(
-                                      EdgeInsets.all(20)),
-                                  backgroundColor:
-                                      MaterialStateProperty.all(Colors.blue),
-                                  // <-- Button color
-                                  overlayColor:
-                                      MaterialStateProperty.resolveWith<Color?>(
-                                          (states) {
-                                    if (states.contains(MaterialState.pressed))
-                                      return Colors.red; // <-- Splash color
-                                  }),
-                                ),
-                              ),
-                            ),
-                            PolicyCard(
-                              cardHeight: 20,
-                              assetPath: 'assets/icons/motor_policy.svg',
-                              onPressed: () {},
-                              imageType: 1,
-                              subTitle: '',
-                              isRenewal: false,
-                              title: LocaleKeys.Medical.tr(),
-                            ),
-                            PolicyCard(
-                              cardHeight: 20,
-                              assetPath: 'assets/icons/motor_policy_1.svg',
-                              onPressed: () {},
-                              imageType: 1,
-                              subTitle: '',
-                              isRenewal: true,
-                              title: LocaleKeys.Motor.tr(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      DotsIndicator(
-                        dotsCount: 2,
-                        position: 0,
-                        decorator: DotsDecorator(
-                          size: const Size.square(9.0),
-                          activeSize: const Size(18.0, 9.0),
-                          activeShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
-                        ),
-                      ),
-                      CustomHeaderView(title: LocaleKeys.services.tr()),
-                      Container(
-                        child: Row(
-                          children: [
-                            ServicesCard(
-                              cardHeight: 20,
-                              assetPath: 'assets/icons/road_assistance.svg',
-                              onPressed: () {},
-                              imageType: 1,
-                              subTitle: LocaleKeys.assistance.tr(),
-                              cardType: 1,
-                              title: LocaleKeys.Road_Side.tr(),
-                              titleColor: Color(0xFFF5A800),
-                            ),
-                            Column(
-                              children: [
-                                ServicesCard(
-                                    cardHeight: 20,
-                                    assetPath:
-                                        'assets/icons/health_services.svg',
-                                    onPressed: () {},
-                                    imageType: 1,
-                                    subTitle: LocaleKeys.services.tr(),
-                                    cardType: 2,
-                                    title: LocaleKeys.Health.tr(),
-                                    titleColor: Color(0xFF2ED8AA)),
-                                ServicesCard(
-                                    cardHeight: 20,
-                                    assetPath:
-                                        'assets/icons/claim_services.svg',
-                                    onPressed: () {},
-                                    imageType: 1,
-                                    subTitle: LocaleKeys.services.tr(),
-                                    cardType: 2,
-                                    title: LocaleKeys.Claim.tr(),
-                                    titleColor: Color(0xFF39A9ED)),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomHeaderView(title: LocaleKeys.special_offers.tr()),
-                      Container(
-                        height: 170.0,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            SpecialOfferCard(),
-                            SpecialOfferCard(),
-                          ],
-                        ),
-                      ),
-                      CustomHeaderView(title: LocaleKeys.quick_tips.tr()),
-                      Column(
-                        children: [
-                          QuickTipsCard(
-                            cardHeight: 20,
-                            assetPath: 'assets/icons/quick_tips_health.svg',
-                            onPressed: () {},
-                            imageType: 1,
-                            subTitle: '',
-                            isRenewal: false,
-                            title: LocaleKeys.healthy_tips.tr(),
-                          ),
-                          QuickTipsCard(
-                            cardHeight: 20,
-                            assetPath: 'assets/icons/quick_tips_2.svg',
-                            onPressed: () {},
-                            imageType: 1,
-                            subTitle: '',
-                            isRenewal: false,
-                            title: LocaleKeys.ride_safe.tr(),
-                          ),
+                          Padding(
+                              padding:
+                                  EdgeInsets.only(top: 20, left: 10, right: 10),
+                              child: Row(
+                                children: [
+                                  Text("Arabic",
+                                      style: GoogleFonts.poppins(
+                                          textStyle: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: kHomeHeaderColor)),
+                                      textAlign: TextAlign.left),
+                                  Switch(
+                                    // thumb color (round icon)
+                                    activeColor: Colors.amber,
+                                    activeTrackColor: Colors.cyan,
+                                    inactiveThumbColor:
+                                        Colors.blueGrey.shade600,
+                                    inactiveTrackColor: Colors.grey.shade400,
+                                    splashRadius: 50.0,
+                                    // boolean variable value
+                                    value: forArabic,
+                                    // changes the state of the switch
+                                    onChanged: (value) {
+                                      setState(() async {
+                                        if (forArabic == true)
+                                          await context.setLocale(
+                                              context.supportedLocales[1]);
+                                        else
+                                          await context.setLocale(
+                                              context.supportedLocales[0]);
+                                        forArabic = value;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ))
                         ],
-                      ),
-                    ],
-                  ),
-                ),
+                      ))),
+            ],
+          ),
         ),
       ),
-    );
+      borderRadius: 30,
+      showShadow: true,
+      angle: 0.0,
+      slideWidth: 300,
+      isRtl: true,
+      menuBackgroundColor: bgColor,
+    ));
   }
 
-  Widget buildMenu() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 50.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 22.0,
-                ),
-                SizedBox(height: 16.0),
-                Text(
-                  "Hello, John Doe",
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(height: 20.0),
-              ],
-            ),
-          ),
-          ListTile(
-            onTap: () {},
-            leading: const Icon(Icons.home, size: 20.0, color: Colors.white),
-            title: const Text("Home"),
-            textColor: Colors.white,
-            dense: true,
-          ),
-          ListTile(
-            onTap: () {},
-            leading: const Icon(Icons.verified_user,
-                size: 20.0, color: Colors.white),
-            title: const Text("Profile"),
-            textColor: Colors.white,
-            dense: true,
-
-            // padding: EdgeInsets.zero,
-          ),
-          ListTile(
-            onTap: () {},
-            leading: const Icon(Icons.monetization_on,
-                size: 20.0, color: Colors.white),
-            title: const Text("Wallet"),
-            textColor: Colors.white,
-            dense: true,
-
-            // padding: EdgeInsets.zero,
-          ),
-          ListTile(
-            onTap: () {},
-            leading: const Icon(Icons.shopping_cart,
-                size: 20.0, color: Colors.white),
-            title: const Text("Cart"),
-            textColor: Colors.white,
-            dense: true,
-
-            // padding: EdgeInsets.zero,
-          ),
-          ListTile(
-            onTap: () {},
-            leading:
-                const Icon(Icons.star_border, size: 20.0, color: Colors.white),
-            title: const Text("Favorites"),
-            textColor: Colors.white,
-            dense: true,
-
-            // padding: EdgeInsets.zero,
-          ),
-          ListTile(
-            onTap: () {},
-            leading:
-                const Icon(Icons.settings, size: 20.0, color: Colors.white),
-            title: const Text("Settings"),
-            textColor: Colors.white,
-            dense: true,
-
-            // padding: EdgeInsets.zero,
-          ),
-        ],
-      ),
-    );
-  }
 
   AnimatedContainer navigationBar() {
     return AnimatedContainer(
@@ -522,19 +489,18 @@ class _HomeScreenState extends State<HomeScreen> {
         color: white,
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF0000000D),
-            blurRadius: 25.0,
-            spreadRadius: 25,
+            color: Colors.black38,
+            blurRadius: 5.0,
+            spreadRadius: 1,
             offset: Offset(
-              -20,
-              -20,
+              -2,
+              -2,
             ),
           )
         ],
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(selectBtn == 0 ? 0.0 : 20.0),
-          topRight:
-              Radius.circular(selectBtn == navBtn.length - 1 ? 0.0 : 20.0),
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
         ),
       ),
       child: Row(
@@ -661,13 +627,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _downloadAssets(List<Asset> assets, Box<Asset> dataBox) async {
     isLoading = true;
     try {
-   /*   if (_dir == null) {
+      /*   if (_dir == null) {
         _dir = (await getApplicationDocumentsDirectory()).path;
       }*/
       for (int i = 0; i < assets.length; i++) {
-        Directory documentDirectory =  await getApplicationDocumentsDirectory();
-        File file = await _downloadFile(
-            '${assets.elementAt(i).httpUrl}', '${assets.elementAt(i).filename}', documentDirectory.path);
+        Directory documentDirectory = await getApplicationDocumentsDirectory();
+        File file = await _downloadFile('${assets.elementAt(i).httpUrl}',
+            '${assets.elementAt(i).filename}', documentDirectory.path);
         assets.elementAt(i).localUrl = file.path;
       }
       print(assets);
@@ -682,6 +648,58 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }*/
   }
+
+  void showDialog() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      transitionDuration: Duration(milliseconds: 500),
+      barrierLabel: MaterialLocalizations.of(context).dialogLabel,
+      barrierColor: Colors.black.withOpacity(0.5),
+      pageBuilder: (context, _, __) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white,
+              child: Card(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    ListTile(
+                      title: Text('Item 1'),
+                      onTap: () => Navigator.of(context).pop('item1'),
+                    ),
+                    ListTile(
+                      title: Text('Item 2'),
+                      onTap: () => Navigator.of(context).pop('item2'),
+                    ),
+                    ListTile(
+                      title: Text('Item 3'),
+                      onTap: () => Navigator.of(context).pop('item3'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ).drive(Tween<Offset>(
+            begin: Offset(0, -1.0),
+            end: Offset.zero,
+          )),
+          child: child,
+        );
+      },
+    );
+  }
 }
 
 /*  Future<bool> _hasToDownloadAssets(String name, String dir) async {
@@ -693,4 +711,245 @@ Future<File> _downloadFile(String url, String filename, String dir) async {
   var req = await http.Client().get(Uri.parse(url));
   var file = File('$dir/$filename');
   return file.writeAsBytes(req.bodyBytes);
+}
+
+class DrawerScreen extends StatefulWidget {
+  final ValueSetter setIndex;
+
+  const DrawerScreen({Key? key, required this.setIndex}) : super(key: key);
+
+  @override
+  State<DrawerScreen> createState() => _DrawerScreenState();
+}
+
+class _DrawerScreenState extends State<DrawerScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: bgColor,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 100.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0), //or 15.0
+                  child: Container(
+                    height: 50.0,
+                    width: 50.0,
+                    color: dashboardBackground,
+                    child: Icon(Icons.person,
+                        color: Colors.white, size: 50.0),
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Welcome Back",
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(fontSize: 12),
+                          color: notificationTextColor),
+                    ),
+                    Text("Smriti Ranjan Biswal",
+                        style: GoogleFonts.poppins(
+                            textStyle: TextStyle(fontSize: 12),
+                            fontWeight: FontWeight.bold,
+                            color: kHeaderColor)),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(height: 20,),
+            ListTile(
+              onTap: () {},
+              leading:  Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.person_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
+              title: Text("Profile",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+              textColor: Colors.white,
+              dense: true,
+            ),
+            ListTile(
+              onTap: () {},
+              leading:  Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.home_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
+              title: Text("Home",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+              textColor: Colors.white,
+              dense: true,
+
+              // padding: EdgeInsets.zero,
+            ),
+            ListTile(
+              onTap: () {},
+              leading:  Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.production_quantity_limits_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
+              title: Text("Products",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+              textColor: Colors.white,
+              dense: true,
+
+              // padding: EdgeInsets.zero,
+            ),
+            ListTile(
+              onTap: () {},
+              leading:  Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.miscellaneous_services_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
+              title: Text("Services",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+              textColor: Colors.white,
+              dense: true,
+
+              // padding: EdgeInsets.zero,
+            ),
+            ListTile(
+              onTap: () {},
+                leading: Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: const Icon(Icons.policy_rounded,
+                      size: 20.0, color: Colors.white),
+                ),
+              title: Text("My Policies",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+            ),
+            ListTile(
+              onTap: () {},
+              leading:
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: const Icon(Icons.cached_rounded,
+                        size: 20.0, color: Colors.white),
+                  ),
+              title: Text("Claims",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+              textColor: Colors.white,
+              dense: true,
+              // padding: EdgeInsets.zero,
+            ),
+            ListTile(
+              onTap: () {},
+              leading:
+              const  Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.settings_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
+              title: Text("Settings",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+              textColor: Colors.white,
+              dense: true,
+              // padding: EdgeInsets.zero,
+            ),
+            ListTile(
+              onTap: () {},
+              leading:
+              const  Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.policy_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
+              title: Text("Terms & Conditions",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+              textColor: Colors.white,
+              dense: true,
+              // padding: EdgeInsets.zero,
+            ),
+            ListTile(
+              onTap: () {},
+              leading:
+              const  Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.support_agent_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
+              title: Text("Support",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+              textColor: Colors.white,
+              dense: true,
+              // padding: EdgeInsets.zero,
+            ),
+            ListTile(
+              onTap: () {},
+              leading:
+              const  Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.logout_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
+              title: Text("Logout",
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 12),
+                      color: kHeaderColor)),
+              textColor: Colors.white,
+              dense: true,
+              // padding: EdgeInsets.zero,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget drawerList(IconData icon, String text, int index) {
+    return GestureDetector(
+      onTap: () {
+        widget.setIndex(index);
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 20, bottom: 12),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 12,
+            ),
+            Text(
+              text,
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
