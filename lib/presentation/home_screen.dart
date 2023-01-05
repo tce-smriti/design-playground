@@ -1,9 +1,12 @@
 import 'dart:io';
-
-import 'package:art_flutter/components/header_policy_card.dart';
-import 'package:art_flutter/components/quick_tips_card.dart';
-import 'package:art_flutter/components/service_card.dart';
-import 'package:art_flutter/components/special_offer_card.dart';
+import 'package:art_components/components/custom_header_view_home.dart';
+import 'package:art_components/components/custom_paint_bar.dart';
+import 'package:art_components/components/header_medical_policy_card.dart';
+import 'package:art_components/components/header_policy_card.dart';
+import 'package:art_components/components/policy_card.dart';
+import 'package:art_components/components/quick_tips_card.dart';
+import 'package:art_components/components/service_card.dart';
+import 'package:art_components/components/special_offer_card.dart';
 import 'package:art_flutter/locales/locale_keys.g.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -18,11 +21,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shrink_sidemenu/shrink_sidemenu.dart';
 import 'package:http/http.dart' as http;
 import '../assets_type.dart';
-import '../components/custom_button.dart';
-import '../components/custom_header_view_home.dart';
-import '../components/custom_paint_bar.dart';
-import '../components/header_medical_policy_card.dart';
-import '../components/policy_card.dart';
 import '../constants.dart';
 import '../models/bottom_bar.dart';
 import '../text_style.dart';
@@ -33,16 +31,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  GlobalKey<SliderDrawerState> _key = GlobalKey<SliderDrawerState>();
+  late ScrollController _scrollController;
   bool isOpened = false;
-  final GlobalKey<SideMenuState> _sideMenuKey = GlobalKey<SideMenuState>();
-  final GlobalKey<SideMenuState> _endSideMenuKey = GlobalKey<SideMenuState>();
   int selectBtn = 0;
+  double indicatorPosition= 0;
   late String title;
   bool forArabic = false;
-  final _myDuration = Duration(seconds: 1);
-  double _myValue = 260.0;
-  double _myNewValue = 460;
   bool isOpen = false;
   late Box<Asset> dataBox;
   late String _dir;
@@ -51,33 +45,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List get assetList => _assetList;
   bool isLoading = true;
+  late double _scrollPosition;
+
+  _scrollListener() {
+    setState(() {
+      _scrollPosition = _scrollController.position.pixels;
+      if(_scrollPosition > 400)
+        indicatorPosition = 1;
+      else
+        indicatorPosition = 0;
+    });
+  }
 
   @override
   void initState() {
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
     title = "Home";
     super.initState();
     /* dataBox = Hive.box<Asset>("assetFolder1");
     _assetList = dataBox.values.toList();
     _downloadAssets(_assetList, dataBox);*/
     //var data = dataBox.getAt(0);
-  }
-
-  toggleMenu([bool end = false]) {
-    if (end) {
-      final _state = _endSideMenuKey.currentState!;
-      if (_state.isOpened) {
-        _state.closeSideMenu();
-      } else {
-        _state.openSideMenu();
-      }
-    } else {
-      final _state = _sideMenuKey.currentState!;
-      if (_state.isOpened) {
-        _state.closeSideMenu();
-      } else {
-        _state.openSideMenu();
-      }
-    }
   }
 
   @override
@@ -103,55 +92,107 @@ class _HomeScreenState extends State<HomeScreen> {
                     CustomHeaderView(title: LocaleKeys.my_policies.tr()),
                     Container(
                       height: 170.0,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: Icon(Icons.add),
-                              style: ButtonStyle(
-                                shape:
-                                    MaterialStateProperty.all(CircleBorder()),
-                                padding: MaterialStateProperty.all(
-                                    EdgeInsets.all(20)),
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.blue),
-                                // <-- Button color
-                                overlayColor:
-                                    MaterialStateProperty.resolveWith<Color?>(
-                                        (states) {
-                                  if (states.contains(MaterialState.pressed))
-                                    return Colors.red; // <-- Splash color
-                                }),
+                      child:
+                      NotificationListener(
+                        child:  ListView(
+                          controller: _scrollController,
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(20),
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: Icon(Icons.add),
+                                style: ButtonStyle(
+                                  shape:
+                                  MaterialStateProperty.all(CircleBorder()),
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.all(20)),
+                                  backgroundColor:
+                                  MaterialStateProperty.all(Colors.blue),
+                                  // <-- Button color
+                                  overlayColor:
+                                  MaterialStateProperty.resolveWith<Color?>(
+                                          (states) {
+                                        if (states.contains(MaterialState.pressed))
+                                          return Colors.red; // <-- Splash color
+                                      }),
+                                ),
                               ),
                             ),
-                          ),
-                          PolicyCard(
-                            cardHeight: 20,
-                            assetPath: 'assets/icons/motor_policy.svg',
-                            onPressed: () {},
-                            imageType: 1,
-                            subTitle: '',
-                            isRenewal: false,
-                            title: LocaleKeys.Medical.tr(),
-                          ),
-                          PolicyCard(
-                            cardHeight: 20,
-                            assetPath: 'assets/icons/motor_policy_1.svg',
-                            onPressed: () {},
-                            imageType: 1,
-                            subTitle: '',
-                            isRenewal: true,
-                            title: LocaleKeys.Motor.tr(),
-                          ),
-                        ],
+                            PolicyCard(
+                              cardHeight: 20,
+                              assetPath: 'assets/icons/motor_policy.svg',
+                              onPressed: () {},
+                              imageType: 1,
+                              subTitle: '',
+                              isRenewal: false,
+                              title: LocaleKeys.Medical.tr(),
+                            ),
+                            PolicyCard(
+                              cardHeight: 20,
+                              assetPath: 'assets/icons/motor_policy_1.svg',
+                              onPressed: () {},
+                              imageType: 1,
+                              subTitle: '',
+                              isRenewal: true,
+                              title: LocaleKeys.Motor.tr(),
+                            ),
+                            PolicyCard(
+                              cardHeight: 20,
+                              assetPath: 'assets/icons/motor_policy.svg',
+                              onPressed: () {},
+                              imageType: 1,
+                              subTitle: '',
+                              isRenewal: false,
+                              title: LocaleKeys.Medical.tr(),
+                            ),
+                            PolicyCard(
+                              cardHeight: 20,
+                              assetPath: 'assets/icons/motor_policy.svg',
+                              onPressed: () {},
+                              imageType: 1,
+                              subTitle: '',
+                              isRenewal: false,
+                              title: LocaleKeys.Medical.tr(),
+                            ),
+                            PolicyCard(
+                              cardHeight: 20,
+                              assetPath: 'assets/icons/motor_policy.svg',
+                              onPressed: () {},
+                              imageType: 1,
+                              subTitle: '',
+                              isRenewal: false,
+                              title: LocaleKeys.Medical.tr(),
+                            ),
+                          ],
+                        ),
+                        onNotification: (t) {
+                          if (t is ScrollEndNotification) {
+                            print(_scrollController.position.pixels);
+                          }
+                          if(_scrollController.position.pixels > 400){
+                            setState(() {
+                              indicatorPosition = 1;
+                            });
+                          }
+                          else{
+                           /* setState(() {
+                              indicatorPosition = 0;
+                            });*/
+                          }
+                          //How many pixels scrolled from pervious frame
+                          print(t);
+
+                          //List scroll position
+                         // print(t.metrics.pixels);
+                          return false;
+                        },
                       ),
                     ),
                     DotsIndicator(
                       dotsCount: 2,
-                      position: 0,
+                      position: indicatorPosition,
                       decorator: DotsDecorator(
                         size: const Size.square(9.0),
                         activeSize: const Size(18.0, 9.0),
@@ -489,13 +530,10 @@ class _HomeScreenState extends State<HomeScreen> {
         color: white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black38,
-            blurRadius: 5.0,
-            spreadRadius: 1,
-            offset: Offset(
-              -2,
-              -2,
-            ),
+            color: Color(0xffE5E5EB),
+            blurRadius: 15.0,
+            spreadRadius: 2.0,
+            offset: Offset(0.0, -3.0),
           )
         ],
         borderRadius: BorderRadius.only(
