@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late ScrollController _scrollController;
   bool isOpened = false;
   int selectBtn = 0;
-  double indicatorPosition= 0;
+  double indicatorPosition = 0;
   late String title;
   bool forArabic = false;
   bool isOpen = false;
@@ -47,20 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = true;
   late double _scrollPosition;
 
-  _scrollListener() {
-    setState(() {
-      _scrollPosition = _scrollController.position.pixels;
-      if(_scrollPosition > 400)
-        indicatorPosition = 1;
-      else
-        indicatorPosition = 0;
-    });
-  }
-
   @override
   void initState() {
     _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
     title = "Home";
     super.initState();
     /* dataBox = Hive.box<Asset>("assetFolder1");
@@ -79,22 +68,24 @@ class _HomeScreenState extends State<HomeScreen> {
       mainScreen: Scaffold(
         bottomNavigationBar: navigationBar(),
         body: SingleChildScrollView(
+          physics: isOpen
+              ? NeverScrollableScrollPhysics()
+              : AlwaysScrollableScrollPhysics(),
           child: Stack(
             key: UniqueKey(),
             children: [
               Container(
-                color: dashboardBackground,
+                color: Colors.red,
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 260,
+                      height: 220,
                     ),
                     CustomHeaderView(title: LocaleKeys.my_policies.tr()),
                     Container(
                       height: 170.0,
-                      child:
-                      NotificationListener(
-                        child:  ListView(
+                      child: NotificationListener(
+                        child: ListView(
                           controller: _scrollController,
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[
@@ -105,18 +96,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Icon(Icons.add),
                                 style: ButtonStyle(
                                   shape:
-                                  MaterialStateProperty.all(CircleBorder()),
+                                      MaterialStateProperty.all(CircleBorder()),
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(20)),
                                   backgroundColor:
-                                  MaterialStateProperty.all(Colors.blue),
+                                      MaterialStateProperty.all(Colors.blue),
                                   // <-- Button color
                                   overlayColor:
-                                  MaterialStateProperty.resolveWith<Color?>(
+                                      MaterialStateProperty.resolveWith<Color?>(
                                           (states) {
-                                        if (states.contains(MaterialState.pressed))
-                                          return Colors.red; // <-- Splash color
-                                      }),
+                                    if (states.contains(MaterialState.pressed))
+                                      return Colors.red; // <-- Splash color
+                                  }),
                                 ),
                               ),
                             ),
@@ -171,13 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (t is ScrollEndNotification) {
                             print(_scrollController.position.pixels);
                           }
-                          if(_scrollController.position.pixels > 400){
+                          if (_scrollController.position.pixels > 400) {
                             setState(() {
                               indicatorPosition = 1;
                             });
-                          }
-                          else{
-                           /* setState(() {
+                            //  indicatorPosition = 1;
+                          } else {
+                            /* setState(() {
                               indicatorPosition = 0;
                             });*/
                           }
@@ -185,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           print(t);
 
                           //List scroll position
-                         // print(t.metrics.pixels);
+                          // print(t.metrics.pixels);
                           return false;
                         },
                       ),
@@ -282,161 +273,186 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height:
-                    isOpen ? MediaQuery.of(context).size.height * 0.87 : null,
+                    isOpen ? MediaQuery.of(context).size.height * 0.80 : null,
                 child: isOpen
                     ? Image(
-                        image: AssetImage("assets/icons/expanded_header_2.png"))
+                        image: AssetImage("assets/icons/expanded_header_2.png"),
+                        fit: BoxFit.fill,
+                      )
                     : Image(
                         image:
                             AssetImage("assets/icons/collapsed_header_2.png"),
                       ),
               ),
-              isOpen
-                  ? Positioned(
-                      top: MediaQuery.of(context).size.height * 0.81,
-                      right: MediaQuery.of(context).size.width * 0.08,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isOpen = !isOpen;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.keyboard_arrow_up_rounded,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ),
-                    )
-                  : Positioned(
-                      top: MediaQuery.of(context).size.height * 0.20,
-                      right: MediaQuery.of(context).size.width * 0.08,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isOpen = !isOpen;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
               Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                      padding: EdgeInsets.only(top: 1),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(20),
-                                child: SvgPicture.asset(
-                                  "assets/icons/logo-horizontal.svg",
-                                  width: 20,
-                                  height: 20,
+                alignment: Alignment.topCenter,
+                child: GestureDetector(
+                    child: Padding(
+                        padding: EdgeInsets.only(top: 1),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/logo-horizontal.svg",
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
-                              ),
-                              Spacer(),
-                              Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () async {
-                                      /*  setState(() async {
+                                Spacer(),
+                                Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () async {
+                                        /*  setState(() async {
                                                     await context.setLocale(context.supportedLocales[0]);
                                                   });*/
-                                    },
-                                    child: SvgPicture.asset(
-                                      "assets/icons/notification.svg",
-                                      width: 20,
-                                      height: 20,
-                                    ),
-                                  ),
-                                  InkWell(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(20),
-                                        child: SvgPicture.asset(
-                                          "assets/icons/nav_icon.svg",
-                                          width: 15,
-                                          height: 15,
-                                        ),
+                                      },
+                                      child: SvgPicture.asset(
+                                        "assets/icons/notification.svg",
+                                        width: 20,
+                                        height: 20,
                                       ),
-                                      onTap: () {
-                                        ZoomDrawer.of(context)!.toggle();
-                                      }),
-                                ],
-                              )
-                            ],
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Text(LocaleKeys.good_morning.tr(),
-                                  style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                          fontSize: 12, color: kHeaderColor)),
-                                  textAlign: TextAlign.left)),
-                          Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Text("Smriti Ranjan Biswal",
-                                  style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                          fontSize: 16,
-                                          color: kHeaderColor,
-                                          fontWeight: FontWeight.bold)),
-                                  textAlign: TextAlign.left)),
-                          isOpen
-                              ? Padding(
-                                  padding: EdgeInsets.only(top: 20, left: 10),
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.70,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 127,
-                                              child: HeaderButton(
-                                                  title: LocaleKeys
-                                                      .motor_renewal
-                                                      .tr()),
-                                            ),
-                                            Spacer(),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 10),
-                                                child: Text(
-                                                    LocaleKeys.view_all.tr(),
-                                                    style: GoogleFonts.poppins(
-                                                        textStyle: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                kHeaderColor)),
-                                                    textAlign: TextAlign.left)),
-                                          ],
+                                    ),
+                                    InkWell(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(20),
+                                          child: SvgPicture.asset(
+                                            "assets/icons/nav_icon.svg",
+                                            width: 15,
+                                            height: 15,
+                                          ),
                                         ),
-                                        HeaderPolicyCard(),
-                                        HeaderPolicyCard(),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        SizedBox(
+                                        onTap: () {
+                                          ZoomDrawer.of(context)!.toggle();
+                                        }),
+                                  ],
+                                )
+                              ],
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(left: 20, right: 20),
+                                child: Text(LocaleKeys.good_morning.tr(),
+                                    style: GoogleFonts.poppins(
+                                        textStyle: TextStyle(
+                                            fontSize: 12, color: kHeaderColor)),
+                                    textAlign: TextAlign.left)),
+                            Padding(
+                                padding: EdgeInsets.only(left: 20, right: 20),
+                                child: Text("Smriti Ranjan Biswal",
+                                    style: GoogleFonts.poppins(
+                                        textStyle: TextStyle(
+                                            fontSize: 16,
+                                            color: kHeaderColor,
+                                            fontWeight: FontWeight.bold)),
+                                    textAlign: TextAlign.left)),
+                            isOpen
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 20, left: 10, right: 10),
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.55,
+                                      child: ListView(
+                                        shrinkWrap: true,
+                                        children: <Widget>[
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 127,
+                                                child: HeaderButton(
+                                                    title: LocaleKeys
+                                                        .motor_renewal
+                                                        .tr()),
+                                              ),
+                                              Spacer(),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                      LocaleKeys.view_all.tr(),
+                                                      style: GoogleFonts.poppins(
+                                                          textStyle: TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  kHeaderColor)),
+                                                      textAlign:
+                                                          TextAlign.left)),
+                                            ],
+                                          ),
+                                          HeaderPolicyCard(),
+                                          HeaderPolicyCard(),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          /*  SizedBox(
                                           width: 140,
                                           child: HeaderButton(
                                             title:
                                                 LocaleKeys.medical_renewal.tr(),
                                           ),
-                                        ),
-                                        HeaderMedicalPolicyCard(),
-                                        HeaderMedicalPolicyCard(),
+                                        ),*/
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 140,
+                                                child: HeaderButton(
+                                                    title: LocaleKeys
+                                                        .medical_renewal
+                                                        .tr()),
+                                              ),
+                                              Spacer(),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                      LocaleKeys.view_all.tr(),
+                                                      style: GoogleFonts.poppins(
+                                                          textStyle: TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  kHeaderColor)),
+                                                      textAlign:
+                                                          TextAlign.left)),
+                                            ],
+                                          ),
+                                          HeaderMedicalPolicyCard(),
+                                          HeaderMedicalPolicyCard(),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: EdgeInsets.only(top: 20, left: 10),
+                                    child: Container(
+                                      height: 30,
+                                      child: ListView(
+                                        scrollDirection: Axis.horizontal,
+                                        children: <Widget>[
+                                          HeaderButton(
+                                              title: LocaleKeys.motor_renewal
+                                                  .tr()),
+                                          HeaderButton(
+                                            title:
+                                                LocaleKeys.medical_renewal.tr(),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                            isOpen
+                                ? Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
                                         SizedBox(
-                                          height: 10,
+                                          height: 20,
                                         ),
                                         Center(
                                           child: Text("+ Check More",
@@ -449,27 +465,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         )
                                       ],
                                     ),
-                                  ),
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.only(top: 20, left: 10),
-                                  child: Container(
-                                    height: 30,
-                                    child: ListView(
-                                      scrollDirection: Axis.horizontal,
-                                      children: <Widget>[
-                                        HeaderButton(
-                                            title:
-                                                LocaleKeys.motor_renewal.tr()),
-                                        HeaderButton(
-                                          title:
-                                              LocaleKeys.medical_renewal.tr(),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                          Padding(
+                                  )
+                                : SizedBox()
+                            /*Padding(
                               padding:
                                   EdgeInsets.only(top: 20, left: 10, right: 10),
                               child: Row(
@@ -505,9 +503,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                   ),
                                 ],
-                              ))
-                        ],
-                      ))),
+                              ))*/
+                          ],
+                        ))),
+              ),
+              isOpen
+                  ? Positioned(
+                      top: MediaQuery.of(context).size.height * 0.74,
+                      right: MediaQuery.of(context).size.width * 0.08,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isOpen = !isOpen;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.keyboard_arrow_up_rounded,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : Positioned(
+                      top: MediaQuery.of(context).size.height * 0.20,
+                      right: MediaQuery.of(context).size.width * 0.08,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isOpen = !isOpen;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -521,21 +553,20 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 
-
   AnimatedContainer navigationBar() {
     return AnimatedContainer(
       height: 70.0,
       duration: const Duration(milliseconds: 400),
       decoration: BoxDecoration(
         color: white,
-        boxShadow: [
+       /* boxShadow: [
           BoxShadow(
             color: Color(0xffE5E5EB),
             blurRadius: 15.0,
             spreadRadius: 2.0,
             offset: Offset(0.0, -3.0),
           )
-        ],
+        ],*/
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20.0),
           topRight: Radius.circular(20.0),
@@ -761,6 +792,8 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
+  int? currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -780,11 +813,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     height: 50.0,
                     width: 50.0,
                     color: dashboardBackground,
-                    child: Icon(Icons.person,
-                        color: Colors.white, size: 50.0),
+                    child: Icon(Icons.person, color: Colors.white, size: 50.0),
                   ),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -803,157 +837,193 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 )
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             ListTile(
-              onTap: () {},
-              leading:  Padding(
+              onTap: () {
+                setState(() {
+                  currentIndex = 1;
+                });
+              },
+              leading: Padding(
                 padding: EdgeInsets.only(left: 20),
-                child: const Icon(Icons.person_rounded,
-                    size: 20.0, color: Colors.white),
+                child: Icon(Icons.person_rounded,
+                    size: 20.0, color: currentIndex == 1
+                        ? bgColor:kHeaderColor),
               ),
               title: Text("Profile",
                   style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
-              textColor: Colors.white,
+                      textStyle: TextStyle(fontSize: 12), color: currentIndex == 1
+                      ? bgColor:kHeaderColor)),
+              tileColor: currentIndex == 1 ? Colors.white : null,
+              shape: RoundedRectangleBorder( //<-- SEE HERE
+                borderRadius: BorderRadius.circular(10),
+              ),
+              //textColor: Colors.white,
               dense: true,
             ),
             ListTile(
-              onTap: () {},
-              leading:  Padding(
+              onTap: () {
+                setState(() {
+                  currentIndex = 2;
+                });
+              },
+              leading: Padding(
                 padding: EdgeInsets.only(left: 20),
-                child: const Icon(Icons.home_rounded,
-                    size: 20.0, color: Colors.white),
+                child: Icon(Icons.home_rounded,
+                    size: 20.0, color: currentIndex == 2
+                    ? bgColor:kHeaderColor),
               ),
               title: Text("Home",
                   style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
+                      textStyle: TextStyle(fontSize: 12), color: currentIndex == 2
+                      ? bgColor:kHeaderColor)),
+              tileColor: currentIndex == 2 ? Colors.white : null,
+              shape: RoundedRectangleBorder( //<-- SEE HERE
+                borderRadius: BorderRadius.circular(10),
+              ),
               textColor: Colors.white,
               dense: true,
 
               // padding: EdgeInsets.zero,
             ),
             ListTile(
-              onTap: () {},
-              leading:  Padding(
+              onTap: () {
+                setState(() {
+                  currentIndex = 3;
+                });
+              },
+              leading: Padding(
                 padding: EdgeInsets.only(left: 20),
-                child: const Icon(Icons.production_quantity_limits_rounded,
-                    size: 20.0, color: Colors.white),
+                child:  Icon(Icons.production_quantity_limits_rounded,
+                    size: 20.0, color: currentIndex == 3
+                        ? bgColor:kHeaderColor),
+              ),
+              tileColor: currentIndex == 3 ? Colors.white : null,
+              shape: RoundedRectangleBorder( //<-- SEE HERE
+                borderRadius: BorderRadius.circular(10),
               ),
               title: Text("Products",
                   style: GoogleFonts.poppins(
                       textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
-              textColor: Colors.white,
+                      color: currentIndex == 3
+                          ? bgColor
+                          : kHeaderColor)),
+              //textColor: currentIndex == 3 ? Colors.blue:Colors.white,
               dense: true,
 
               // padding: EdgeInsets.zero,
             ),
             ListTile(
-              onTap: () {},
-              leading:  Padding(
+              onTap: () {
+                setState(() {
+                  currentIndex = 4;
+                });
+              },
+              leading: Padding(
                 padding: EdgeInsets.only(left: 20),
-                child: const Icon(Icons.miscellaneous_services_rounded,
-                    size: 20.0, color: Colors.white),
+                child: Icon(Icons.miscellaneous_services_rounded,
+                    size: 20.0, color: currentIndex == 4
+                        ? bgColor:kHeaderColor),
               ),
               title: Text("Services",
                   style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
+                      textStyle: TextStyle(fontSize: 12), color: kHeaderColor)),
               textColor: Colors.white,
               dense: true,
 
               // padding: EdgeInsets.zero,
             ),
             ListTile(
-              onTap: () {},
-                leading: Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: const Icon(Icons.policy_rounded,
-                      size: 20.0, color: Colors.white),
-                ),
+              onTap: () {
+                setState(() {
+                  currentIndex = 5;
+                });
+              },
+              leading: Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.policy_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
               title: Text("My Policies",
                   style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
+                      textStyle: TextStyle(fontSize: 12), color: kHeaderColor)),
             ),
             ListTile(
-              onTap: () {},
-              leading:
-                  const Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: const Icon(Icons.cached_rounded,
-                        size: 20.0, color: Colors.white),
-                  ),
+              onTap: () {
+                setState(() {
+                  currentIndex = 6;
+                });
+              },
+              leading: const Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: const Icon(Icons.cached_rounded,
+                    size: 20.0, color: Colors.white),
+              ),
               title: Text("Claims",
                   style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
+                      textStyle: TextStyle(fontSize: 12), color: kHeaderColor)),
               textColor: Colors.white,
               dense: true,
               // padding: EdgeInsets.zero,
             ),
             ListTile(
-              onTap: () {},
-              leading:
-              const  Padding(
+              onTap: () {
+                setState(() {
+                  currentIndex = 7;
+                });
+              },
+              leading: const Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: const Icon(Icons.settings_rounded,
                     size: 20.0, color: Colors.white),
               ),
               title: Text("Settings",
                   style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
+                      textStyle: TextStyle(fontSize: 12), color: kHeaderColor)),
               textColor: Colors.white,
               dense: true,
               // padding: EdgeInsets.zero,
             ),
             ListTile(
               onTap: () {},
-              leading:
-              const  Padding(
+              leading: const Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: const Icon(Icons.policy_rounded,
                     size: 20.0, color: Colors.white),
               ),
               title: Text("Terms & Conditions",
                   style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
+                      textStyle: TextStyle(fontSize: 12), color: kHeaderColor)),
               textColor: Colors.white,
               dense: true,
               // padding: EdgeInsets.zero,
             ),
             ListTile(
               onTap: () {},
-              leading:
-              const  Padding(
+              leading: const Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: const Icon(Icons.support_agent_rounded,
                     size: 20.0, color: Colors.white),
               ),
               title: Text("Support",
                   style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
+                      textStyle: TextStyle(fontSize: 12), color: kHeaderColor)),
               textColor: Colors.white,
               dense: true,
               // padding: EdgeInsets.zero,
             ),
             ListTile(
               onTap: () {},
-              leading:
-              const  Padding(
+              leading: const Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: const Icon(Icons.logout_rounded,
                     size: 20.0, color: Colors.white),
               ),
               title: Text("Logout",
                   style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                      color: kHeaderColor)),
+                      textStyle: TextStyle(fontSize: 12), color: kHeaderColor)),
               textColor: Colors.white,
               dense: true,
               // padding: EdgeInsets.zero,

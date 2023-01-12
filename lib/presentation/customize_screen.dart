@@ -84,11 +84,11 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                 Container(
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                     width: double.maxFinite,
-                    height: MediaQuery.of(context).size.height * 0.12,
+                    height: MediaQuery.of(context).size.height * 0.13,
                     child: Card(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
-                        elevation: 5,
+                        elevation: 2,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -126,11 +126,11 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                 Container(
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                     width: double.maxFinite,
-                    height: MediaQuery.of(context).size.height * 0.12,
+                    height: MediaQuery.of(context).size.height * 0.13,
                     child: Card(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
-                        elevation: 5,
+                        elevation: 2,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +175,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                     child: Card(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
-                        elevation: 5,
+                        elevation: 2,
                         child: Column(
                           //mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,7 +238,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                     child: Card(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
-                        elevation: 5,
+                        elevation: 2,
                         child: Column(
                           //mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
